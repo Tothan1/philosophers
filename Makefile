@@ -7,16 +7,7 @@ CFLAGS=-Wall -Wextra -Werror -pthread
 # OBJ=ft_*.c =.o
 # SRCS = $(HEADER_PATH)ft_atoi
 #### SOURCE ####
-SRC_FILES = ft_strjoin.c \
-		liste_utils.c \
-		operation_global.c \
-		index.c \
-		radix_sort.c \
-		algo_sort_small.c \
-		operation_precise.c \
-		operation_precise2.c \
-		free.c \
-		parsing.c
+SRC_FILES = main.c
 
 OBJ_FILES = $(SRC_FILES:.c=.o)
 # OBJ_FILES = $(addsuffix .o, $(SRC_FILES))
@@ -25,7 +16,7 @@ all: ${NAME}
 
 
 ${NAME} :${OBJ_FILES} 
-	${CC} ${CFLAGS} -o ${NAME} ${OBJ_FILES}-g3
+	${CC} ${CFLAGS} -o ${NAME} ${OBJ_FILES}
 
 %.o: %.c
 	${CC} ${CFLAGS} -c $< -o $@ -g3
