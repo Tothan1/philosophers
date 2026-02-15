@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/15 17:10:23 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/15 19:03:44 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,26 +51,14 @@ t_philo	*recover_map(t_glob var)
 	while (i < (var.number_of_philosophers - 1))
 	{
 		philosoph[i].id = i;
-		philosoph[i].nb_fork = 0;
+		philosoph[i].nb_fork = 1;
 		philosoph[i].is_died = 0;
 		i++;
 	}
 	return (philosoph);
 }
 
-/* void	*routine (t_glob var)
-{
-	
-}
 
-t_glob	process(t_glob var, int i)
-{
-	if (pthread_create(var.philosoph[i].p, NULL, &routine, &var.philosoph[i]) != 0)
-		exit (2);
-	if (pthread_join(var.philosoph[i].p, NULL) != 0)
-		exit (2);
-	return (var);
-} */
 void	initialise_struct_global(t_glob *var, int ac, char **av)
 {
 	var->number_of_philosophers = ft_atoi(av[1]);
@@ -98,12 +86,12 @@ int check_is_died(t_glob var)
 int	main(int ac, char **av)
 {
 	t_glob var;
-	// pthread_mutex_t mutex;
+	pthread_mutex_t mutex;
 	int i;
 	if (ac == 5 || ac == 6)
 	{
 		i = 1;
-		// pthread_mutex_init(&mutex, NULL);
+		pthread_mutex_init(&mutex, NULL);
 		while (i < ac &&  0 < ft_atoi(av[i]))
 			i++;
 		if( i < ac && 1 > ft_atoi(av[i]))
@@ -111,13 +99,14 @@ int	main(int ac, char **av)
 		return (1);
 		initialise_struct_global(&var, ac, av);
 		var.philosoph = recover_map(var);
-		/* while ((i < var.number_of_times_each_philosopher_must_eat
-			|| var.number_of_times_each_philosopher_must_eat == 1) && check_is_died(var->philosoph))
+		while ((i < var.number_of_times_each_philosopher_must_eat
+			|| var.number_of_times_each_philosopher_must_eat == 1) && check_is_died(var))
 			{
-				var = process(var, i);
+				if(process(&var) == 2)
+					return(2);
 				i++;
 			}
-			pthread_mutex_destroy(&mutex); */
+			pthread_mutex_destroy(&mutex);
 		}
 	else
 		return (2);
