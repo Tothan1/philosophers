@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/16 17:27:04 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:16:39 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct info
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
+	int is_died;
 	int	number_of_times_each_philosopher_must_eat;
 }		t_info;
 
@@ -32,7 +33,7 @@ typedef struct philosoph
 	pthread_mutex_t self;
 	pthread_mutex_t neighbor;
 	int id;
-	int is_died;
+	int nb_eat;
 	t_info info;
 	pthread_t p;
 }		t_philo;
@@ -47,9 +48,9 @@ typedef struct global
 /* PROCESS */
 void	*routine (void* var);
 int	process(t_glob *var);
+void	take_a_fork(t_philo philo);
 
-
-int check_is_died(t_glob var);
+int check_is_died(t_info var);
 
 
 /* UTILS */
