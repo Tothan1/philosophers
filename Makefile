@@ -8,6 +8,7 @@ CFLAGS=-Wall -Wextra -Werror -pthread
 # SRCS = $(HEADER_PATH)ft_atoi
 #### SOURCE ####
 SRC_FILES = 	process.c \
+			utils.c \
 			main.c
 
 OBJ_FILES = $(SRC_FILES:.c=.o)
