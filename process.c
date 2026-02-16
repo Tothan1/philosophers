@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/15 19:22:02 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/16 10:25:11 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,20 @@
 void	*routine (void* var)
 {
 	t_philo *philo;
-	struct timeval t;
+	struct timeval start, end;
 	philo = (t_philo *)var;
 	// check_is_died();
-	gettimeofday(&t, NULL);
-	if(t< 200)
+	gettimeofday(&start, NULL);
+	take_a_fork(philo)
+	gettimeofday(&end, NULL);
+	if(((end.tv_usec - start.tv_usec) * 1000)< 200)
 		philo->is_died = 1;
 	return (NULL);
 }
-
+take_a_fork()
+{
+	
+}
 int	process(t_glob *var)
 {
 	int i = 0;
