@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/16 18:16:39 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 21:27:51 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ typedef struct global
 /* PROCESS */
 void	*routine (void* var);
 int	process(t_glob *var);
-void	take_a_fork(t_philo philo);
+int	take_a_fork(t_philo **philo);
 
 int check_is_died(t_info var);
 
 
 /* UTILS */
 int	ft_atoi( char *str);
-void	philo_print(t_philo philo, int time, char *print);
+void	philo_print(t_philo ***philo, int time, char *print);

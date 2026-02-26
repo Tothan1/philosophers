@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 10:26:01 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 21:49:57 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_philo	*recover_map(t_info var)
 	{
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
+		philosoph[i].info = var;
 		if(i == 0)
 			philosoph[i].neighbor = philosoph[var.number_of_philosophers-1].self;
 		else
