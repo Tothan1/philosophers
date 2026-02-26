@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 21:49:57 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 22:12:14 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ int	main(int ac, char **av)
 	if (ac == 5 || ac == 6)
 	{
 		i = 1;
-		while (i < ac &&  0 < ft_atoi(av[i]))
+		while (i < ac &&  0 < ft_atoi(av[i]) && 2147483648  > ft_atoi(av[i]))
 			i++;
-		if( i < ac && 1 > ft_atoi(av[i]))
+		if( i < ac)
 			return(2);
 		i = 0;
 		initialise_struct_info(&global.info, ac, av);

@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 21:27:51 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 22:10:35 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,5 @@ int check_is_died(t_info var);
 
 
 /* UTILS */
-int	ft_atoi( char *str);
+long	ft_atoi( char *str);
 void	philo_print(t_philo ***philo, int time, char *print);

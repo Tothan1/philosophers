@@ -6,17 +6,17 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 21:23:44 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 22:09:51 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi( char *str)
+long	ft_atoi( char *str)
 {
 	int	i;
 	int	signe;
-	int	nombre;
+	long	nombre;
 
 	i = 0;
 	signe = 1;
