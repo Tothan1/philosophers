@@ -6,12 +6,11 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 10:08:48 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 10:26:01 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <stdio.h>
 
 
 
@@ -23,7 +22,6 @@ t_philo	*recover_map(t_info var)
 
 	philosoph = malloc(sizeof(t_philo) * (var.number_of_philosophers));
 	i = 0;
-	printf("test,i%d", i);
 	while (i < (var.number_of_philosophers))
 	{
 		philosoph[i].id = i + 1;

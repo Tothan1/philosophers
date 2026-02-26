@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 10:08:25 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 10:25:51 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	action(t_philo philo, int time, char * print)
 	check_is_died(philo.info);
 	if(check_is_died(philo.info)==0)
 		return;
+	printf("time:%d",time);
 	usleep(time * 1000);
 	philo_print(philo, time, print);
 }
@@ -36,7 +37,7 @@ void	*routine (void* var)
 	gettimeofday(&end, NULL);
 	if(((end.tv_usec - start.tv_usec) * 1000)< philo->info.time_to_die)
 	{
-		philo_print(*philo, 0, "died");
+		philo_print(*philo, 0, "is died");
 		philo->info.is_died = 1;
 	}
 	return (NULL);
