@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/16 18:32:06 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 10:03:04 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ int	ft_atoi( char *str)
 void	philo_print(t_philo philo, int time, char *print)
 {
 	philo.info.all_time += time; 
-	printf("%dms %dis %s\n", time,philo.id, print);
+	printf("%dms %d %s\n", time,philo.id, print);
 }

@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/16 19:25:04 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/26 10:08:48 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ t_philo	*recover_map(t_info var)
 	t_philo	*philosoph;
 	int		i;
 
-	philosoph = malloc(sizeof(t_philo *) * (var.number_of_philosophers - 1));
+	philosoph = malloc(sizeof(t_philo) * (var.number_of_philosophers));
 	i = 0;
-	while (i < (var.number_of_philosophers - 1))
+	printf("test,i%d", i);
+	while (i < (var.number_of_philosophers))
 	{
-		philosoph[i].id = i;
+		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
 		if(i == 0)
 			philosoph[i].neighbor = philosoph[var.number_of_philosophers-1].self;
@@ -63,21 +64,20 @@ int	main(int ac, char **av)
 {
 	t_glob global;
 	pthread_mutex_t mutex;
+	pthread_mutex_init(&mutex, NULL);
 	int i;
 	if (ac == 5 || ac == 6)
 	{
 		i = 1;
-		pthread_mutex_init(&mutex, NULL);
 		while (i < ac &&  0 < ft_atoi(av[i]))
 			i++;
 		if( i < ac && 1 > ft_atoi(av[i]))
 			return(2);
-		return (1);
 		i = 0;
 		initialise_struct_info(&global.info, ac, av);
 		global.philosoph = recover_map(global.info);
 		while ((i < global.info.number_of_times_each_philosopher_must_eat
-			|| global.info.number_of_times_each_philosopher_must_eat == 1) && check_is_died(global.info))
+			|| global.info.number_of_times_each_philosopher_must_eat == -1) && check_is_died(global.info))
 			{
 				if(process(&global) == 2)
 					return(2);
