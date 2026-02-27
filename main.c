@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 22:12:14 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/27 19:28:50 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_philo	*recover_map(t_info var)
 	{
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
-		philosoph[i].info = var;
+		philosoph[i].info = &var;
 		if(i == 0)
 			philosoph[i].neighbor = philosoph[var.number_of_philosophers-1].self;
 		else
@@ -51,9 +51,9 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 		var->number_of_times_each_philosopher_must_eat = -1;
 }
 
-int check_is_died(t_info var)
+int check_is_died(t_info *var)
 {
-	if(var.is_died == 1)
+	if(var->is_died == 1)
 		return(0);
 	else
 		return(1);
@@ -76,7 +76,7 @@ int	main(int ac, char **av)
 		initialise_struct_info(&global.info, ac, av);
 		global.philosoph = recover_map(global.info);
 		while ((i < global.info.number_of_times_each_philosopher_must_eat
-			|| global.info.number_of_times_each_philosopher_must_eat == -1) && check_is_died(global.info))
+			|| global.info.number_of_times_each_philosopher_must_eat == -1) && check_is_died(global.philosoph->info))
 			{
 				if(process(&global) == 2)
 					return(2);

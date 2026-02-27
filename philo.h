@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/26 22:10:35 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/27 19:28:18 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct philosoph
 	pthread_mutex_t neighbor;
 	int id;
 	int nb_eat;
-	t_info info;
+	t_info *info;
 	pthread_t p;
 }		t_philo;
 
@@ -50,7 +50,7 @@ void	*routine (void* var);
 int	process(t_glob *var);
 int	take_a_fork(t_philo **philo);
 
-int check_is_died(t_info var);
+int check_is_died(t_info *var);
 
 
 /* UTILS */
