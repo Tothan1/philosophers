@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/27 19:04:00 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/28 19:00:50 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ long	ft_atoi( char *str)
 	return (nombre);
 }
 
-void	philo_print(t_philo ***philo, int time, char *print)
+void	philo_print(t_philo *philo, int time, char *print)
 {
-	(**philo)->info->all_time += time; 
+	philo->info->start_time += time; 
 	// void(*print);
-	printf("%dms %d %s\n", (**philo)->info->all_time, (**philo)->id, print);
+	printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
 }

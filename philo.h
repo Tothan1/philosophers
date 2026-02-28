@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/27 19:28:18 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/02/28 19:09:05 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,23 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+typedef struct philo t_philo;
+typedef struct info t_info;
+
 typedef struct info
 {
-	int	number_of_philosophers;
+	int	nbr_of_philo;
 
-	int	all_time;
+	int	start_time;
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
 	int is_died;
-	int	number_of_times_each_philosopher_must_eat;
+	int	nbr_must_eat ;
+	t_philo	*philo;
 }		t_info;
 
-typedef struct philosoph
+typedef struct philo
 {
 	pthread_mutex_t self;
 	pthread_mutex_t neighbor;
@@ -48,11 +52,8 @@ typedef struct global
 /* PROCESS */
 void	*routine (void* var);
 int	process(t_glob *var);
-int	take_a_fork(t_philo **philo);
-
-int check_is_died(t_info *var);
-
+int	take_a_fork(t_philo *philo);
 
 /* UTILS */
 long	ft_atoi( char *str);
-void	philo_print(t_philo ***philo, int time, char *print);
+void	philo_print(t_philo *philo, int time, char *print);
