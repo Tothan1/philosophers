@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 20:03:23 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 20:49:47 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void	action(t_philo *philo, int time, char *print)
 {
 	int lower_time;
-	lower_time = 10;
+	lower_time = 0;
 	while(!philo->info->finished && lower_time < time)
 	{
-		usleep(lower_time * 1000);
+		usleep(10 * 1000);
 		lower_time += 10;
 	}
 		philo_print(philo, time, print);
@@ -43,9 +43,10 @@ void	*routine(void *var)
 		action(philo, philo->info->time_to_sleep, "is sleeping");
 		action(philo, 50, "is thinking");
 		gettimeofday(&end2, NULL);
-		if (((end2.tv_usec - start.tv_usec) * 1000) > philo->info->time_to_die)
+		if ((end2.tv_sec* 1000 + end2.tv_usec / 1000) - (start.tv_sec* 1000 + start.tv_usec / 1000) > philo->info->time_to_die)
 		{
 			philo_print(philo, 0, "is died");
+			printf("philo: %d time:%ld\n", philo->id, (end2.tv_sec* 1000 + end2.tv_usec / 1000) - (start.tv_sec* 1000 + start.tv_usec / 1000) );
 			philo->is_died = 1;
 			philo->info->finished = 1;
 		}
