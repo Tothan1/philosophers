@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 11:29:46 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 16:01:24 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ t_philo	*recover_map(t_info var)
 	{
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
+		philosoph[i].fork = 0;
+		philosoph[i].is_died = 0;
 		philosoph[i].info = &var;
 		if (i == 0)
 			philosoph[i].neighbor = &philosoph[var.nbr_of_philo - 1].self;
@@ -36,7 +38,6 @@ t_philo	*recover_map(t_info var)
 void	initialise_struct_info(t_info *var, int ac, char **av)
 {
 	var->start_time = 0;
-	var->is_died = 0;
 	var->nbr_of_philo = ft_atoi(av[1]);
 	var->time_to_die = ft_atoi(av[2]);
 	var->time_to_eat = ft_atoi(av[3]);
@@ -47,7 +48,7 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 		var->nbr_must_eat = -1;
 }
 
-int	check_nb_eat(t_philo *philo, t_info info)
+/* int	check_nb_eat(t_philo *philo, t_info info)
 {
 	int i = 0;
 	while (i < info.nbr_of_philo && info.nbr_must_eat != -1)
@@ -57,17 +58,19 @@ int	check_nb_eat(t_philo *philo, t_info info)
 		i++;
 	}
 	return (0);
-}
+} */
 int	finish(t_glob var)
 {
 	int i;
 	i = 0;
+	if (pthread_join(var.died.p, NULL) != 0)
+			return (2);
 	while (i < var.info.nbr_of_philo)
 	{
 		if (pthread_join(var.philosoph[i].p, NULL) != 0)
 			return (2);
 		pthread_mutex_destroy(&var.philosoph[i].self);
-		pthread_mutex_destroy(var.philosoph[i].neighbor);
+		// pthread_mutex_destroy(var.philosoph[i].neighbor);
 		i++;
 	}
 	return (0);
@@ -89,16 +92,6 @@ int	main(int ac, char **av)
 		global.philosoph = recover_map(global.info);
 		if (process(&global) == 2)	
 			return (2);
-		while (1)
-		{
-			if(check_nb_eat(global.philosoph, global.info))
-				break;
-			else	if(global.info.is_died == 1)
-			{
-				philo_print(global.philosoph, 0, "is died");
-				break;
-			}
-		}
 		finish(global);
 	}
 	else
