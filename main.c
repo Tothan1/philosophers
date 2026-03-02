@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 19:25:01 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 19:51:17 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	finish(t_glob *var)
 	
 	if (pthread_join(var->died.p, NULL) != 0)
 		return (2);
+	pthread_mutex_destroy(&var->info.write);
 	while (i < var->info.nbr_of_philo)
 	{
 		if (pthread_join(var->philosoph[i].p, NULL) != 0)

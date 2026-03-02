@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 19:24:50 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 20:03:23 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 
 void	action(t_philo *philo, int time, char *print)
 {
-	usleep(time * 1000);
-	philo_print(philo, time, print);
+	int lower_time;
+	lower_time = 10;
+	while(!philo->info->finished && lower_time < time)
+	{
+		usleep(lower_time * 1000);
+		lower_time += 10;
+	}
+		philo_print(philo, time, print);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-
 
 	struct timeval start, end, end2;
 	philo = (t_philo *)var;
@@ -30,11 +35,11 @@ void	*routine(void *var)
 		gettimeofday(&start, NULL);
 		take_a_fork(philo);
 		gettimeofday(&end, NULL);
-		/* 	if (((end.tv_usec - start.tv_usec) * 1000) > philo->info->time_to_eat)
+		/* if (((end.tv_usec - start.tv_usec) * 1000) > philo->info->time_to_eat)
 		{
 			philo_print(philo, 0, "is died");
 			philo->is_died = 1;
-			} */
+		} */
 		action(philo, philo->info->time_to_sleep, "is sleeping");
 		action(philo, 50, "is thinking");
 		gettimeofday(&end2, NULL);
@@ -102,6 +107,7 @@ int	process(t_glob *var)
 		var->philosoph[0].is_died = 1;
 		return (1);
 	}
+	pthread_mutex_init(&var->info.write, NULL);
 	while (i < var->info.nbr_of_philo)
 	{
 		pthread_mutex_init(&var->philosoph[i].self, NULL);

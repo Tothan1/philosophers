@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 19:28:14 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 20:00:17 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,14 @@ long	ft_atoi( char *str)
 
 void	philo_print(t_philo *philo, int time, char *print)
 {
-	philo->info->start_time += time; 
-	if(!philo->info->finished)
+	philo->info->start_time += time;
+	pthread_mutex_lock(&philo->info->write);
+	if (!philo->info->finished)
 	{
 		if (time != 0)
-		printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
+			printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
 		else
-		printf("%d %s\n", philo->id, print);
+			printf("%d %s\n", philo->id, print);
 	}
+	pthread_mutex_unlock(&philo->info->write);
 }
