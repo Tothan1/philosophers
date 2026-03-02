@@ -6,28 +6,28 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 16:01:24 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 19:25:01 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo	*recover_map(t_info var)
+t_philo	*recover_map(t_info *var)
 {
 	t_philo	*philosoph;
 	int		i;
 
-	philosoph = malloc(sizeof(t_philo) * (var.nbr_of_philo));
+	philosoph = malloc(sizeof(t_philo) * (var->nbr_of_philo));
 	i = 0;
-	while (i < (var.nbr_of_philo))
+	while (i < (var->nbr_of_philo))
 	{
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
 		philosoph[i].fork = 0;
 		philosoph[i].is_died = 0;
-		philosoph[i].info = &var;
+		philosoph[i].info = var;
 		if (i == 0)
-			philosoph[i].neighbor = &philosoph[var.nbr_of_philo - 1].self;
+			philosoph[i].neighbor = &philosoph[var->nbr_of_philo - 1].self;
 		else
 			philosoph[i].neighbor = &philosoph[i - 1].self;
 		i++;
@@ -46,6 +46,7 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 		var->nbr_must_eat = ft_atoi(av[5]);
 	else
 		var->nbr_must_eat = -1;
+	var->finished = 0;
 }
 
 /* int	check_nb_eat(t_philo *philo, t_info info)
@@ -59,20 +60,22 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 	}
 	return (0);
 } */
-int	finish(t_glob var)
+int	finish(t_glob *var)
 {
 	int i;
 	i = 0;
-	if (pthread_join(var.died.p, NULL) != 0)
-			return (2);
-	while (i < var.info.nbr_of_philo)
+	
+	if (pthread_join(var->died.p, NULL) != 0)
+		return (2);
+	while (i < var->info.nbr_of_philo)
 	{
-		if (pthread_join(var.philosoph[i].p, NULL) != 0)
+		if (pthread_join(var->philosoph[i].p, NULL) != 0)
 			return (2);
-		pthread_mutex_destroy(&var.philosoph[i].self);
+		pthread_mutex_destroy(&var->philosoph[i].self);
 		// pthread_mutex_destroy(var.philosoph[i].neighbor);
 		i++;
 	}
+	free(var->philosoph);
 	return (0);
 }
 
@@ -89,10 +92,10 @@ int	main(int ac, char **av)
 		if (i < ac)
 			return (2);
 		initialise_struct_info(&global.info, ac, av);
-		global.philosoph = recover_map(global.info);
+		global.philosoph = recover_map(&global.info);
 		if (process(&global) == 2)	
 			return (2);
-		finish(global);
+		finish(&global);
 	}
 	else
 		return (2);
