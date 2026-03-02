@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/28 19:00:50 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 11:45:06 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,9 @@ void	philo_print(t_philo *philo, int time, char *print)
 {
 	philo->info->start_time += time; 
 	// void(*print);
-	printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
+	if (time != 0)
+		printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
+	else
+		printf("%d %s\n", philo->id, print);
+	// printf("%d %s\n", philo->id, print);
 }

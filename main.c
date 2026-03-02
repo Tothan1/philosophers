@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/28 19:43:36 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 11:29:46 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ t_philo	*recover_map(t_info var)
 		philosoph[i].nb_eat = 0;
 		philosoph[i].info = &var;
 		if (i == 0)
-			philosoph[i].neighbor = philosoph[var.nbr_of_philo - 1].self;
+			philosoph[i].neighbor = &philosoph[var.nbr_of_philo - 1].self;
 		else
-			philosoph[i].neighbor = philosoph[i - 1].self;
+			philosoph[i].neighbor = &philosoph[i - 1].self;
 		i++;
 	}
 	return (philosoph);
@@ -50,23 +50,34 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 int	check_nb_eat(t_philo *philo, t_info info)
 {
 	int i = 0;
-	while (i < info.nbr_of_philo)
+	while (i < info.nbr_of_philo && info.nbr_must_eat != -1)
 	{
 		if(philo->nb_eat == info.nbr_must_eat)
-			return(0);
+			return(1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
-finish()
+int	finish(t_glob var)
+{
+	int i;
+	i = 0;
+	while (i < var.info.nbr_of_philo)
+	{
+		if (pthread_join(var.philosoph[i].p, NULL) != 0)
+			return (2);
+		pthread_mutex_destroy(&var.philosoph[i].self);
+		pthread_mutex_destroy(var.philosoph[i].neighbor);
+		i++;
+	}
+	return (0);
+}
 
 int	main(int ac, char **av)
 {
 	t_glob			global;
-	pthread_mutex_t	mutex;
 	int				i;
 
-	pthread_mutex_init(&mutex, NULL);
 	if (ac == 5 || ac == 6)
 	{
 		i = 1;
@@ -74,35 +85,21 @@ int	main(int ac, char **av)
 			i++;
 		if (i < ac)
 			return (2);
-		i = 0;
 		initialise_struct_info(&global.info, ac, av);
 		global.philosoph = recover_map(global.info);
 		if (process(&global) == 2)	
 			return (2);
 		while (1)
 		{
-			if(check_nb_eat(global.philosoph, global.info) || global.info.nbr_must_eat == -1)
+			if(check_nb_eat(global.philosoph, global.info))
 				break;
-			else	if(global.info.is_died != 1)
+			else	if(global.info.is_died == 1)
 			{
 				philo_print(global.philosoph, 0, "is died");
 				break;
 			}
 		}
-		finish();
-		i = 0;
-		while(i < global.info.nbr_of_philo)
-		{
-			pthread_join();
-			i++;
-		}
-		i = 0;
-		while(i < global.info.nbr_of_philo)
-		{
-			pthread_mutex_destroy(&global.philosoph->neighbor);
-			pthread_mutex_destroy(&global.philosoph->self);
-			i++;
-		}
+		finish(global);
 	}
 	else
 		return (2);

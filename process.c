@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/02/28 19:22:56 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/02 11:53:54 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	*routine (void* var)
 		return(NULL);
 	take_a_fork(philo);
 	action(philo, philo->info->time_to_sleep, "is sleeping");
-	action(philo, 100 , "is thinking");
+	action(philo, 50 , "is thinking");
 	gettimeofday(&end, NULL);
-	if(((end.tv_usec - start.tv_usec) * 1000)< philo->info->time_to_die)
+	if(((end.tv_usec - start.tv_usec) * 1000) > philo->info->time_to_die)
 	{
 		// philo_print(&&philo, 0, "is died");
 		philo->info->is_died = 1;
@@ -47,24 +47,27 @@ int	take_a_fork(t_philo *philo)
 	philo_print(philo, 0,"has taken a fork");
 	if(philo->info->is_died == 1)
 		return(2);
-	pthread_mutex_lock(&philo->neighbor);
+	pthread_mutex_lock(philo->neighbor);
 	philo_print(philo, 0,"has taken a fork");
 	action(philo, philo->info->time_to_eat, "is eating");
 	philo->nb_eat++;
 	pthread_mutex_unlock(&philo->self);
-	pthread_mutex_unlock(&philo->neighbor);
+	pthread_mutex_unlock(philo->neighbor);
 	// udpate de last_meal time
 	return(1);
 }
 int	process(t_glob *var)
 {
 	int i = 0;
+	if(var->info.nbr_of_philo == 1)
+		return (1);
 	while (i < var->info.nbr_of_philo)
 	{
+		pthread_mutex_init(&var->philosoph[i].self, NULL);
+		// pthread_mutex_init(&var->philosoph[i].neighbor, NULL);
 		if (pthread_create(&var->philosoph[i].p, NULL, &routine, &var->philosoph[i]) != 0)
 			return (2);
 		i++;
 	}
-	printf ("test");
 	return (1);
 }
