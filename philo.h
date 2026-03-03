@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 20:25:41 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/03 16:23:13 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct info
 {
 	int	nbr_of_philo;
 
-	int	start_time;
+	long	start_time; 
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
@@ -41,6 +41,7 @@ typedef struct philo
 	int fork;
 	int nb_eat;
 	int is_died;
+	long last_meal;
 	t_info *info;
 	pthread_t p;
 }		t_philo;
@@ -70,3 +71,5 @@ int	take_a_fork(t_philo *philo);
 /* UTILS */
 long	ft_atoi( char *str);
 void	philo_print(t_philo *philo, int time, char *print);
+long get_time_ms(struct timeval time);
+void flag_died(t_philo	*philo);

@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/03 12:03:43 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/03 16:33:55 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,38 @@
 void	action(t_philo *philo, int time, char *print)
 {
 	int lower_time;
+	
 	lower_time = 0;
+	flag_died(philo);
 	while(!philo->info->finished && lower_time < time)
 	{
 		usleep(10 * 1000);
 		lower_time += 10;
 	}
-		// usleep(time* 1000);
-		philo_print(philo, time, print);
+	// usleep(time* 1000);
+	philo_print(philo, time, print);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	struct timeval start, end, end2;
+	int time_think;
+	struct timeval start;
 	philo = (t_philo *)var;
+	gettimeofday(&start, NULL);
+		philo->last_meal = get_time_ms(start);
 	while (!philo->info->finished)
 	{
-		gettimeofday(&start, NULL);
 		take_a_fork(philo);
-		gettimeofday(&end, NULL);
-		/* if (((end.tv_usec - start.tv_usec) * 1000) > philo->info->time_to_eat)
-		{
-			philo_print(philo, 0, "is died");
-			philo->is_died = 1;
-		} */
+		gettimeofday(&start, NULL);
+		philo->last_meal = get_time_ms(start);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		action(philo, ((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep)), "is thinking");
-		gettimeofday(&end2, NULL);
-		if ((end2.tv_sec* 1000 + end2.tv_usec / 1000) - (start.tv_sec* 1000 + start.tv_usec / 1000) > philo->info->time_to_die)
-		{
-			philo_print(philo, 0, "is died");
-			printf("philo: %d time:%ld\n", philo->id, (end2.tv_sec* 1000 + end2.tv_usec / 1000) - (start.tv_sec* 1000 + start.tv_usec / 1000) );
-			philo->is_died = 1;
-			philo->info->finished = 1;
-		}
+		if(((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2) > 10)
+			time_think = (philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2;
+		else
+			time_think = 0;
+		action(philo, 0, "is thinking");
+		flag_died(philo);
 	}
 	return (NULL);
 }
@@ -88,8 +85,6 @@ void	*monitor(void * var)
 		while (i < global->info.nbr_of_philo)
 		{
 			if(global->philosoph[i].nb_eat == global->info.nbr_must_eat  && global->info.nbr_must_eat != -1)
-				global->info.finished = 1;
-			if(global->philosoph[i].is_died == 1)
 				global->info.finished = 1;
 			i++;
 		}

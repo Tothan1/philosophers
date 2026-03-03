@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/03 11:58:05 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/03 16:26:27 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,25 @@ void	philo_print(t_philo *philo, int time, char *print)
 	philo->info->start_time += time;
 	pthread_mutex_lock(&philo->info->write);
 	if (!philo->info->finished)
-			printf("%dms %d %s\n", philo->info->start_time, philo->id, print);
+		printf("%ldms %d %s\n", philo->info->start_time, philo->id, print);
 	pthread_mutex_unlock(&philo->info->write);
+}
+
+long get_time_ms(struct timeval time)
+{
+	long time_ms;
+	time_ms = (time.tv_sec* 1000 + time.tv_usec / 1000);
+	return (time_ms);
+}
+
+void flag_died(t_philo	*philo)
+{
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	if ( (get_time_ms(now) -  philo->last_meal) > philo->info->time_to_die)
+	{
+		philo_print(philo, 0, "is died");
+		printf("philo: %d time:%ld\n", philo->id, (get_time_ms(now) -  philo->last_meal));
+		philo->info->finished = 1;
+	}
 }

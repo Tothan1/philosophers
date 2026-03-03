@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/03 12:02:00 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/03 17:01:43 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,6 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 		var->nbr_must_eat = -1;
 	var->finished = 0;
 }
-
-/* int	check_nb_eat(t_philo *philo, t_info info)
-{
-	int i = 0;
-	while (i < info.nbr_of_philo && info.nbr_must_eat != -1)
-	{
-		if(philo->nb_eat == info.nbr_must_eat)
-			return(1);
-		i++;
-	}
-	return (0);
-} */
 int	finish(t_glob *var)
 {
 	int i;
