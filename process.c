@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/02 20:49:47 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/03 12:03:43 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void	action(t_philo *philo, int time, char *print)
 		usleep(10 * 1000);
 		lower_time += 10;
 	}
+		// usleep(time* 1000);
 		philo_print(philo, time, print);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-
 	struct timeval start, end, end2;
 	philo = (t_philo *)var;
 	while (!philo->info->finished)
@@ -41,7 +41,7 @@ void	*routine(void *var)
 			philo->is_died = 1;
 		} */
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		action(philo, 50, "is thinking");
+		action(philo, ((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep)), "is thinking");
 		gettimeofday(&end2, NULL);
 		if ((end2.tv_sec* 1000 + end2.tv_usec / 1000) - (start.tv_sec* 1000 + start.tv_usec / 1000) > philo->info->time_to_die)
 		{
