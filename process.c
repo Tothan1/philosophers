@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 20:57:03 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 22:05:12 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	*routine(void *var)
 		else
 			time_think = 0;
 		if(time_think > 0)
-			printf("time_think, philo.id:%d\n", philo->id);
+			// printf("time_think, philo.id:%d\n", philo->id);
 		action(philo, time_think, "is thinking");
 		flag_died(philo);
 	}
