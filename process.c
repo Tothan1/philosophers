@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 15:39:07 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 16:51:24 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	action(t_philo *philo, int time, char *print)
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	// int time_think;
+	int time_think;
 	struct timeval start;
 	philo = (t_philo *)var;
 	gettimeofday(&start, NULL);
@@ -41,12 +41,16 @@ void	*routine(void *var)
 		take_a_fork(philo);
 		gettimeofday(&start, NULL);
 		philo->last_meal = get_time_ms(start);
+		// printf("philo->info->time_to_sleep:%d\n", philo->info->time_to_sleep);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		// if(((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2) > 10)
-		// 	time_think = (philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2;
-		// else
-		// 	time_think = 0;
-		action(philo, 0, "is thinking");
+		if(philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat)
+		{
+			time_think = 1;
+			printf("philo->id:%d philo->id-1:%d\n", philo->id, philo->id -1);
+		}
+		else
+			time_think = 0;
+		action(philo, time_think, "is thinking");
 		flag_died(philo);
 	}
 	return (NULL);
@@ -87,6 +91,8 @@ void	*monitor(void * var)
 		{
 			if(global->philosoph[i].nb_eat == global->info.nbr_must_eat  && global->info.nbr_must_eat != -1)
 				global->info.finished = 1;
+			// if(global->philosoph[i].nb_eat > global->philosoph[i - 1].nb_eat)
+				
 			i++;
 		}
 	}
