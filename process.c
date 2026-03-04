@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 17:24:36 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:57:03 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void	*routine(void *var)
 	int time_think;
 	struct timeval start;
 	philo = (t_philo *)var;
-	gettimeofday(&start, NULL);
-	philo->info->start_time = get_time_ms(start);
-	philo->last_meal = get_time_ms(start);
+	philo->last_meal = philo->info->start_time;
 	while (!philo->info->finished)
 	{
 		take_a_fork(philo);
@@ -43,13 +41,15 @@ void	*routine(void *var)
 		philo->last_meal = get_time_ms(start);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
 		if((philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat) && philo->id != 1 && philo->id != philo->info->nbr_of_philo -1)
-			time_think = 1;
+			time_think = 10;
 		else if(philo->id == 1 && (philo[philo->id - 1].nb_eat > philo[philo->info->nbr_of_philo - 1].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat))
-			time_think = 1;
+			time_think = 10;
 		else if(philo->id == philo->info->nbr_of_philo -1 && (philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[0].nb_eat))
-			time_think = 1;
+			time_think = 10;
 		else
 			time_think = 0;
+		if(time_think > 0)
+			printf("time_think, philo.id:%d\n", philo->id);
 		action(philo, time_think, "is thinking");
 		flag_died(philo);
 	}
@@ -104,9 +104,10 @@ int	process(t_glob *var)
 	int i = 0;
 	struct timeval start;
 	pthread_mutex_init(&var->info.write, NULL);
+	gettimeofday(&start, NULL);
+	var->info.start_time = get_time_ms(start);
 	if (var->info.nbr_of_philo == 1)
 	{
-		gettimeofday(&start, NULL);
 		var->philosoph[0].last_meal = get_time_ms(start);
 		philo_print(&var->philosoph[0], "has taken a fork");
 		usleep(var->info.time_to_die * 1000);

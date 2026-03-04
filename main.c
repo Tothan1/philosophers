@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 20:19:15 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:55:25 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 {
 	var->start_time = 0;
 	var->nbr_of_philo = ft_atoi(av[1]);
-	var->time_to_die = ft_atoi(av[2]);
+	var->time_to_die = ft_atoi(av[2]);	
 	var->time_to_eat = ft_atoi(av[3]);
 	var->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)

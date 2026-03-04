@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 17:27:11 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:55:27 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct philo
 	int is_died;
 	long last_meal;
 	t_info *info;
-	pthread_t p;
+		pthread_t p;
 }		t_philo;
 
 typedef struct died
