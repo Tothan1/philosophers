@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 16:51:24 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 17:24:36 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ void	*routine(void *var)
 		take_a_fork(philo);
 		gettimeofday(&start, NULL);
 		philo->last_meal = get_time_ms(start);
-		// printf("philo->info->time_to_sleep:%d\n", philo->info->time_to_sleep);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		if(philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat)
-		{
+		if((philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat) && philo->id != 1 && philo->id != philo->info->nbr_of_philo -1)
 			time_think = 1;
-			printf("philo->id:%d philo->id-1:%d\n", philo->id, philo->id -1);
-		}
+		else if(philo->id == 1 && (philo[philo->id - 1].nb_eat > philo[philo->info->nbr_of_philo - 1].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat))
+			time_think = 1;
+		else if(philo->id == philo->info->nbr_of_philo -1 && (philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[0].nb_eat))
+			time_think = 1;
 		else
 			time_think = 0;
 		action(philo, time_think, "is thinking");
@@ -102,15 +102,18 @@ void	*monitor(void * var)
 int	process(t_glob *var)
 {
 	int i = 0;
+	struct timeval start;
+	pthread_mutex_init(&var->info.write, NULL);
 	if (var->info.nbr_of_philo == 1)
 	{
+		gettimeofday(&start, NULL);
+		var->philosoph[0].last_meal = get_time_ms(start);
 		philo_print(&var->philosoph[0], "has taken a fork");
 		usleep(var->info.time_to_die * 1000);
 		philo_print(&var->philosoph[0], "is died");
 		var->philosoph[0].is_died = 1;
 		return (1);
 	}
-	pthread_mutex_init(&var->info.write, NULL);
 	while (i < var->info.nbr_of_philo)
 	{
 		pthread_mutex_init(&var->philosoph[i].self, NULL);

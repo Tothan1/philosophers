@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 15:41:24 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 17:16:07 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void flag_died(t_philo	*philo)
 {
 	struct timeval now;
 	gettimeofday(&now, NULL);
-	if ( (get_time_ms(now) -  philo->last_meal) > philo->info->time_to_die)
+	if ( (get_time_ms(now) -  philo->last_meal) >= philo->info->time_to_die)
 	{
 		philo_print(philo, "is died");
 		printf("philo: %d time:%ld\n", philo->id, (get_time_ms(now) -  philo->last_meal));

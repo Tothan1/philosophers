@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 16:53:37 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 20:19:15 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_philo	*recover_map(t_info *var)
 
 	philosoph = malloc(sizeof(t_philo) * (var->nbr_of_philo));
 	i = 0;
-	while (i < (var->nbr_of_philo))
+	while (i < var->nbr_of_philo)
 	{
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
@@ -53,16 +53,19 @@ int	finish(t_glob *var)
 	int i;
 	i = 0;
 	
-	if (pthread_join(var->died.p, NULL) != 0)
-		return (2);
 	pthread_mutex_destroy(&var->info.write);
-	while (i < var->info.nbr_of_philo)
+	if(var->info.nbr_of_philo != 1)
 	{
-		if (pthread_join(var->philosoph[i].p, NULL) != 0)
+		if (pthread_join(var->died.p, NULL) != 0)
 			return (2);
-		pthread_mutex_destroy(&var->philosoph[i].self);
-		// pthread_mutex_destroy(var.philosoph[i].neighbor);
-		i++;
+		while (i < var->info.nbr_of_philo)
+		{
+			if (pthread_join(var->philosoph[i].p, NULL) != 0)
+				return (2);
+			pthread_mutex_destroy(&var->philosoph[i].self);
+			// pthread_mutex_destroy(var.philosoph[i].neighbor);
+			i++;
+		}
 	}
 	free(var->philosoph);
 	return (0);

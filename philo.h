@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 15:35:08 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 17:27:11 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,13 @@ typedef struct info t_info;
 typedef struct info
 {
 	int	nbr_of_philo;
-
+	
 	long	start_time; 
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	nbr_must_eat ;
 	int	finished;
-	t_philo	*philo;
 	pthread_mutex_t write;
 }		t_info;
 
