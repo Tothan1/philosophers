@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/03 16:23:13 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 15:35:08 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,6 @@ int	take_a_fork(t_philo *philo);
 
 /* UTILS */
 long	ft_atoi( char *str);
-void	philo_print(t_philo *philo, int time, char *print);
+void	philo_print(t_philo *philo, char *print);
 long get_time_ms(struct timeval time);
 void flag_died(t_philo	*philo);

@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/03 16:33:55 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/04 15:39:07 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	action(t_philo *philo, int time, char *print)
 {
 	int lower_time;
 	
-	lower_time = 0;
+	lower_time= 0;
 	flag_died(philo);
 	while(!philo->info->finished && lower_time < time)
 	{
@@ -24,27 +24,28 @@ void	action(t_philo *philo, int time, char *print)
 		lower_time += 10;
 	}
 	// usleep(time* 1000);
-	philo_print(philo, time, print);
+	philo_print(philo, print);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	int time_think;
+	// int time_think;
 	struct timeval start;
 	philo = (t_philo *)var;
 	gettimeofday(&start, NULL);
-		philo->last_meal = get_time_ms(start);
+	philo->info->start_time = get_time_ms(start);
+	philo->last_meal = get_time_ms(start);
 	while (!philo->info->finished)
 	{
 		take_a_fork(philo);
 		gettimeofday(&start, NULL);
 		philo->last_meal = get_time_ms(start);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		if(((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2) > 10)
-			time_think = (philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2;
-		else
-			time_think = 0;
+		// if(((philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2) > 10)
+		// 	time_think = (philo->info->time_to_die)-(philo->info->time_to_eat + philo->info->time_to_sleep) / 2;
+		// else
+		// 	time_think = 0;
 		action(philo, 0, "is thinking");
 		flag_died(philo);
 	}
@@ -56,16 +57,16 @@ int	take_a_fork(t_philo *philo)
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->self);
-		philo_print(philo, 0, "has taken a fork");
+		philo_print(philo, "has taken a fork");
 		pthread_mutex_lock(philo->neighbor);
-		philo_print(philo, 0, "has taken a fork");
+		philo_print(philo, "has taken a fork");
 	}
 	else
 	{
 		pthread_mutex_lock(philo->neighbor);
-		philo_print(philo, 0, "has taken a fork");
+		philo_print(philo, "has taken a fork");
 		pthread_mutex_lock(&philo->self);
-		philo_print(philo, 0, "has taken a fork");
+		philo_print(philo, "has taken a fork");
 	}
 	action(philo, philo->info->time_to_eat, "is eating");
 	philo->nb_eat++;
@@ -97,9 +98,9 @@ int	process(t_glob *var)
 	int i = 0;
 	if (var->info.nbr_of_philo == 1)
 	{
-		philo_print(&var->philosoph[0], 0, "has taken a fork");
+		philo_print(&var->philosoph[0], "has taken a fork");
 		usleep(var->info.time_to_die * 1000);
-		philo_print(&var->philosoph[0], 0, "is died");
+		philo_print(&var->philosoph[0], "is died");
 		var->philosoph[0].is_died = 1;
 		return (1);
 	}
