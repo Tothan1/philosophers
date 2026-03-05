@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 22:05:12 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/05 15:16:44 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,19 @@
 
 void	action(t_philo *philo, int time, char *print)
 {
-	int lower_time;
-	
-	lower_time= 0;
-	flag_died(philo);
-	while(!philo->info->finished && lower_time < time)
-	{
-		usleep(10 * 1000);
-		lower_time += 10;
-	}
-	// usleep(time* 1000);
+	long before;
+
 	philo_print(philo, print);
+	before = get_time_ms();
+	while(!philo->info->finished && (get_time_ms()-before) < time && flag_died(philo))
+		usleep(500);
+	// usleep(time* 1000);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	int time_think;
+	// int time_think;
 	struct timeval start;
 	philo = (t_philo *)var;
 	philo->last_meal = philo->info->start_time;
@@ -40,17 +36,17 @@ void	*routine(void *var)
 		gettimeofday(&start, NULL);
 		philo->last_meal = get_time_ms(start);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		if((philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat) && philo->id != 1 && philo->id != philo->info->nbr_of_philo -1)
-			time_think = 10;
-		else if(philo->id == 1 && (philo[philo->id - 1].nb_eat > philo[philo->info->nbr_of_philo - 1].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat))
-			time_think = 10;
-		else if(philo->id == philo->info->nbr_of_philo -1 && (philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[0].nb_eat))
-			time_think = 10;
-		else
-			time_think = 0;
-		if(time_think > 0)
+		// if((philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat) && philo->id != 1 && philo->id != philo->info->nbr_of_philo -1)
+		// 	time_think = 10;
+		// else if(philo->id == 1 && (philo[philo->id - 1].nb_eat > philo[philo->info->nbr_of_philo - 1].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat))
+		// 	time_think = 10;
+		// else if(philo->id == philo->info->nbr_of_philo -1 && (philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[0].nb_eat))
+		// 	time_think = 10;
+		// else
+		// 	time_think = 0;
+		// if(time_think > 0)
 			// printf("time_think, philo.id:%d\n", philo->id);
-		action(philo, time_think, "is thinking");
+		action(philo, 0, "is thinking");
 		flag_died(philo);
 	}
 	return (NULL);
@@ -102,13 +98,11 @@ void	*monitor(void * var)
 int	process(t_glob *var)
 {
 	int i = 0;
-	struct timeval start;
 	pthread_mutex_init(&var->info.write, NULL);
-	gettimeofday(&start, NULL);
-	var->info.start_time = get_time_ms(start);
+	var->info.start_time = get_time_ms();
 	if (var->info.nbr_of_philo == 1)
 	{
-		var->philosoph[0].last_meal = get_time_ms(start);
+		var->philosoph[0].last_meal = get_time_ms();
 		philo_print(&var->philosoph[0], "has taken a fork");
 		usleep(var->info.time_to_die * 1000);
 		philo_print(&var->philosoph[0], "is died");

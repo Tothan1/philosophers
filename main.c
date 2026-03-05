@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 20:55:25 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/05 10:49:50 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 {
 	var->start_time = 0;
 	var->nbr_of_philo = ft_atoi(av[1]);
-	var->time_to_die = ft_atoi(av[2]);	
+	var->time_to_die = ft_atoi(av[2]);
 	var->time_to_eat = ft_atoi(av[3]);
 	var->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
@@ -50,11 +50,11 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 }
 int	finish(t_glob *var)
 {
-	int i;
+	int	i;
+
 	i = 0;
-	
 	pthread_mutex_destroy(&var->info.write);
-	if(var->info.nbr_of_philo != 1)
+	if (var->info.nbr_of_philo != 1)
 	{
 		if (pthread_join(var->died.p, NULL) != 0)
 			return (2);
@@ -73,8 +73,8 @@ int	finish(t_glob *var)
 
 int	main(int ac, char **av)
 {
-	t_glob			global;
-	int				i;
+	t_glob	global;
+	int		i;
 
 	if (ac == 5 || ac == 6)
 	{
@@ -85,7 +85,7 @@ int	main(int ac, char **av)
 			return (2);
 		initialise_struct_info(&global.info, ac, av);
 		global.philosoph = recover_map(&global.info);
-		if (process(&global) == 2)	
+		if (process(&global) == 2)
 			return (2);
 		finish(&global);
 	}

@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/04 17:16:07 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/05 15:16:15 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ long	ft_atoi( char *str)
 		nombre = nombre * 10 + str[i] - '0';
 		i++;
 	}
+	if (str[i] != '\0')
+		return (0);
 	nombre = signe * nombre;
 	return (nombre);
 }
@@ -48,21 +50,24 @@ void	philo_print(t_philo *philo, char *print)
 	pthread_mutex_unlock(&philo->info->write);
 }
 
-long get_time_ms(struct timeval time)
+long get_time_ms()
 {
+	struct timeval time;
 	long time_ms;
+	
+	gettimeofday(&time, NULL);
 	time_ms = (time.tv_sec* 1000 + time.tv_usec / 1000);
 	return (time_ms);
 }
 
-void flag_died(t_philo	*philo)
+int flag_died(t_philo	*philo)
 {
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	if ( (get_time_ms(now) -  philo->last_meal) >= philo->info->time_to_die)
+	if ( (get_time_ms() -  philo->last_meal) >= philo->info->time_to_die)
 	{
 		philo_print(philo, "is died");
-		printf("philo: %d time:%ld\n", philo->id, (get_time_ms(now) -  philo->last_meal));
+		printf("philo: %d time:%ld\n", philo->id, (get_time_ms() -  philo->last_meal));
 		philo->info->finished = 1;
+		return (0);
 	}
+	return (1);
 }
