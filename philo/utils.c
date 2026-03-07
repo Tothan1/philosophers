@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 14:32:33 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:38:42 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,20 @@ long	get_time_ms(void)
 
 int	flag_died(t_philo *philo)
 {
-	if ((get_time_ms() - philo->last_meal) > philo->info->time_to_die)
+	if ((get_time_ms() - philo->last_meal) >= philo->info->time_to_die)
 	{
 		philo_print(philo, "died");
+		pthread_mutex_lock(&philo->info->died);
 		philo->info->finished = 1;
+		pthread_mutex_unlock(&philo->info->died);
 		return (0);
 	}
+	pthread_mutex_lock(&philo->info->died);
+	if(philo->info->finished == 1)
+	{
+		pthread_mutex_unlock(&philo->info->died);
+		return(0);
+	}
+	pthread_mutex_unlock(&philo->info->died);
 	return (1);
 }

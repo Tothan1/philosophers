@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 14:30:18 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 16:21:46 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct info
 	int					nbr_must_eat;
 	int					finished;
 	pthread_mutex_t		write;
+	pthread_mutex_t		died;
 }						t_info;
 
 typedef struct philo

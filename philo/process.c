@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 14:36:33 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 17:37:49 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void	action(t_philo *philo, int time, char *print)
 
 	philo_print(philo, print);
 	before = get_time_ms();
-	while (!philo->info->finished && (get_time_ms() - before) < time
-		&& flag_died(philo))
+	while ((get_time_ms() - before) < time && flag_died(philo))
 		usleep(500);
 }
 
@@ -30,7 +29,7 @@ void	*routine(void *var)
 
 	time_think = 0;
 	philo = (t_philo *)var;
-	philo->last_meal = philo->info->start_time;
+	philo->last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
 		usleep(1000);
 	while (!philo->info->finished && (philo->info->nbr_must_eat == -1
@@ -88,9 +87,11 @@ void	*monitor(void *var)
 				nb_philo_must_eat++;
 			i++;
 		}
+		pthread_mutex_lock(&global->info.died);
 		if (nb_philo_must_eat == global->info.nbr_of_philo
 			&& global->info.nbr_must_eat != -1)
 			global->info.finished = 1;
+		pthread_mutex_unlock(&global->info.died);
 		usleep(1000);
 	}
 	return (NULL);
@@ -102,6 +103,7 @@ int	process(t_glob *var)
 
 	i = 0;
 	pthread_mutex_init(&var->info.write, NULL);
+	pthread_mutex_init(&var->info.died, NULL);
 	var->info.start_time = get_time_ms();
 	if (var->info.nbr_of_philo == 1)
 	{
@@ -113,7 +115,6 @@ int	process(t_glob *var)
 	}
 	while (i < var->info.nbr_of_philo)
 	{
-		pthread_mutex_init(&var->philosoph[i].self, NULL);
 		if (pthread_create(&var->philosoph[i].p, NULL, &routine,
 				&var->philosoph[i]) != 0)
 			return (2);
