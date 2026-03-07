@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/06 17:08:33 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 14:36:33 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,38 @@
 
 void	action(t_philo *philo, int time, char *print)
 {
-	long before;
+	long	before;
 
 	philo_print(philo, print);
 	before = get_time_ms();
-	while(!philo->info->finished && (get_time_ms()-before) < time && flag_died(philo))
+	while (!philo->info->finished && (get_time_ms() - before) < time
+		&& flag_died(philo))
 		usleep(500);
-	// usleep(time* 1000);
 }
 
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	int time_think;
+	int		time_think;
+
 	time_think = 0;
 	philo = (t_philo *)var;
 	philo->last_meal = philo->info->start_time;
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (!philo->info->finished)
+	while (!philo->info->finished && (philo->info->nbr_must_eat == -1
+			|| philo->nb_eat < philo->info->nbr_must_eat))
 	{
 		take_a_fork(philo);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
-		// if((philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat) && philo->id != 1 && philo->id != philo->info->nbr_of_philo -1)
-		// 	time_think = (philo->info->time_to_die + (philo->info->time_to_sleep - philo->info->time_to_sleep))/10;
-		// else if(philo->id == 1 && (philo[philo->id - 1].nb_eat > philo[philo->info->nbr_of_philo - 1].nb_eat || philo[philo->id - 1].nb_eat > philo[philo->id].nb_eat))
-		// 	time_think = (philo->info->time_to_die + (philo->info->time_to_sleep - philo->info->time_to_sleep))/10;
-		// else if(philo->id == philo->info->nbr_of_philo -1 && (philo[philo->id - 1].nb_eat > philo[philo->id - 2].nb_eat || philo[philo->id - 1].nb_eat > philo[0].nb_eat))
-		// 	time_think = (philo->info->time_to_die + (philo->info->time_to_sleep - philo->info->time_to_sleep))/10;
-		// else
-		// 	time_think = 0;
-		// if(time_think < 10)
-		// 	time_think = 0;
-		// if (philo->id % 2 == 1)
-			// time_think = (philo->info->time_to_die + (philo->info->time_to_sleep - philo->info->time_to_sleep)) / 2;
 		action(philo, 1, "is thinking");
-		flag_died(philo);
 	}
 	return (NULL);
 }
 
 int	take_a_fork(t_philo *philo)
 {
-	if(!philo->info->finished)
+	if (!philo->info->finished)
 	{
 		if (philo->id % 2 == 0)
 		{
@@ -80,30 +69,38 @@ int	take_a_fork(t_philo *philo)
 	pthread_mutex_unlock(philo->neighbor);
 	return (1);
 }
-void	*monitor(void * var)
+
+void	*monitor(void *var)
 {
 	t_glob	*global;
+	int		nb_philo_must_eat;
+	int		i;
 
-	global = (t_glob*) var;
-	int i;
+	global = (t_glob *)var;
 	while (!global->info.finished)
 	{
 		i = 0;
+		nb_philo_must_eat = 0;
 		while (i < global->info.nbr_of_philo)
 		{
-			if(global->philosoph[i].nb_eat == global->info.nbr_must_eat  && global->info.nbr_must_eat != -1)
-				global->info.finished = 1;
-			// if(global->philosoph[i].nb_eat > global->philosoph[i - 1].nb_eat)
-				
+			if (global->philosoph[i].nb_eat == global->info.nbr_must_eat
+				&& global->info.nbr_must_eat != -1)
+				nb_philo_must_eat++;
 			i++;
 		}
+		if (nb_philo_must_eat == global->info.nbr_of_philo
+			&& global->info.nbr_must_eat != -1)
+			global->info.finished = 1;
+		usleep(1000);
 	}
 	return (NULL);
 }
 
 int	process(t_glob *var)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	pthread_mutex_init(&var->info.write, NULL);
 	var->info.start_time = get_time_ms();
 	if (var->info.nbr_of_philo == 1)

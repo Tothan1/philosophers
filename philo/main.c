@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/06 16:16:40 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 13:53:05 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ t_philo	*recover_map(t_info *var)
 	int		i;
 
 	philosoph = malloc(sizeof(t_philo) * (var->nbr_of_philo));
-	if(!philosoph)
-		return(NULL);
+	if (!philosoph)
+		return (NULL);
 	i = 0;
 	while (i < var->nbr_of_philo)
 	{
@@ -49,6 +49,7 @@ void	initialise_struct_info(t_info *var, int ac, char **av)
 		var->nbr_must_eat = -1;
 	var->finished = 0;
 }
+
 int	finish(t_glob *var)
 {
 	int	i;
@@ -64,7 +65,6 @@ int	finish(t_glob *var)
 			if (pthread_join(var->philosoph[i].p, NULL) != 0)
 				return (2);
 			pthread_mutex_destroy(&var->philosoph[i].self);
-			// pthread_mutex_destroy(var.philosoph[i].neighbor);
 			i++;
 		}
 	}
@@ -90,7 +90,7 @@ int	main(int ac, char **av)
 			return (2);
 		if (process(&global) == 2)
 			return (2);
-		if(finish(&global) == 2)
+		if (finish(&global) == 2)
 			return (2);
 	}
 	else
