@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 18:27:49 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 18:42:37 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ void	*monitor(void *var)
 	int		i;
 
 	global = (t_glob *)var;
+	pthread_mutex_lock(&global->info.died);
 	while (!global->info.finished)
 	{
+		pthread_mutex_unlock(&global->info.died);
 		i = 0;
 		nb_philo_must_eat = 0;
 		while (i < global->info.nbr_of_philo)
@@ -105,7 +107,9 @@ void	*monitor(void *var)
 			global->info.finished = 1;
 		pthread_mutex_unlock(&global->info.died);
 		usleep(1000);
+		pthread_mutex_lock(&global->info.died);
 	}
+	pthread_mutex_unlock(&global->info.died);
 	return (NULL);
 }
 
