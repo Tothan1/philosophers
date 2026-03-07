@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 17:37:49 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 18:27:49 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,21 @@ void	*routine(void *var)
 	philo->last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
 		usleep(1000);
+	pthread_mutex_lock(&philo->info->died);
+	pthread_mutex_lock(&philo->eat);
 	while (!philo->info->finished && (philo->info->nbr_must_eat == -1
 			|| philo->nb_eat < philo->info->nbr_must_eat))
 	{
+		pthread_mutex_unlock(&philo->info->died);
+		pthread_mutex_unlock(&philo->eat);
 		take_a_fork(philo);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
 		action(philo, 1, "is thinking");
+		pthread_mutex_lock(&philo->info->died);
+		pthread_mutex_lock(&philo->eat);
 	}
+	pthread_mutex_unlock(&philo->eat);
+	pthread_mutex_unlock(&philo->info->died);
 	return (NULL);
 }
 
@@ -63,7 +71,9 @@ int	take_a_fork(t_philo *philo)
 	}
 	action(philo, philo->info->time_to_eat, "is eating");
 	philo->last_meal = get_time_ms();
+	pthread_mutex_lock(&philo->eat);
 	philo->nb_eat++;
+	pthread_mutex_unlock(&philo->eat);
 	pthread_mutex_unlock(&philo->self);
 	pthread_mutex_unlock(philo->neighbor);
 	return (1);
@@ -82,9 +92,11 @@ void	*monitor(void *var)
 		nb_philo_must_eat = 0;
 		while (i < global->info.nbr_of_philo)
 		{
+			pthread_mutex_lock(&global->philosoph[i].eat);
 			if (global->philosoph[i].nb_eat == global->info.nbr_must_eat
 				&& global->info.nbr_must_eat != -1)
 				nb_philo_must_eat++;
+			pthread_mutex_unlock(&global->philosoph[i].eat);
 			i++;
 		}
 		pthread_mutex_lock(&global->info.died);

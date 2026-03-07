@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 16:21:46 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/07 18:07:36 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct philo
 {
 	pthread_mutex_t		self;
 	pthread_mutex_t		*neighbor;
+	pthread_mutex_t		eat;
 	int					id;
 	int					fork;
 	int					nb_eat;
