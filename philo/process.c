@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/09 17:46:18 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:35:36 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	process(t_glob *var)
 			return (2);
 		i++;
 	}
-	if (pthread_create(&var->died.p, NULL, &monitor, var) != 0)
+	if (pthread_create(&var->p, NULL, &monitor, var) != 0)
 		return (2);
 	return (1);
 }
