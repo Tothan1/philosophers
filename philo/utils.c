@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 15:07:32 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 18:06:37 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:47:14 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ long	ft_atoi(char *str)
 void	philo_print(t_philo *philo, char *print)
 {
 	pthread_mutex_lock(&philo->info->write);
-	if (!philo->info->finished)
+	if (flag_died(philo))
 		printf("%ld %d %s\n", (get_time_ms() - philo->info->start_time),
 			philo->id, print);
 	pthread_mutex_unlock(&philo->info->write);
@@ -61,20 +61,39 @@ long	get_time_ms(void)
 
 int	flag_died(t_philo *philo)
 {
-	if ((get_time_ms() - philo->last_meal) >= philo->info->time_to_die)
+	pthread_mutex_lock(&philo->info->died);
+	if (philo->info->finished == 1)
 	{
-		philo_print(philo, "died");
-		pthread_mutex_lock(&philo->info->died);
-		philo->info->finished = 1;
 		pthread_mutex_unlock(&philo->info->died);
 		return (0);
 	}
-	pthread_mutex_lock(&philo->info->died);
-	if(philo->info->finished == 1)
-	{
-		pthread_mutex_unlock(&philo->info->died);
-		return(0);
-	}
 	pthread_mutex_unlock(&philo->info->died);
 	return (1);
+}
+
+int	monitorv2(t_glob *global, int i, int nb_philo_must_eat)
+{
+	while (i < global->info.nbr_of_philo)
+	{
+		pthread_mutex_lock(&global->philosoph[i].eat);
+		if (global->philosoph[i].nb_eat == global->info.nbr_must_eat
+			&& global->info.nbr_must_eat != -1)
+			nb_philo_must_eat++;
+		pthread_mutex_unlock(&global->philosoph[i].eat);
+		pthread_mutex_lock(&global->philosoph[i].meal);
+		if ((get_time_ms()
+				- global->philosoph[i].last_meal) >= global->info.time_to_die
+			&& global->philosoph[i].last_meal != 0)
+		{
+			pthread_mutex_unlock(&global->philosoph[i].meal);
+			philo_print(&global->philosoph[i], "died");
+			pthread_mutex_lock(&global->info.died);
+			global->info.finished = 1;
+			pthread_mutex_unlock(&global->info.died);
+			return (-1);
+		}
+		pthread_mutex_unlock(&global->philosoph[i].meal);
+		i++;
+	}
+	return (nb_philo_must_eat);
 }

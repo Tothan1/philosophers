@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:42:25 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 18:47:11 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:57:44 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ t_philo	*recover_map(t_info *var)
 	{
 		pthread_mutex_init(&philosoph[i].self, NULL);
 		pthread_mutex_init(&philosoph[i].eat, NULL);
+		pthread_mutex_init(&philosoph[i].meal, NULL);
 		philosoph[i].id = i + 1;
 		philosoph[i].nb_eat = 0;
 		philosoph[i].fork = 0;
+		philosoph[i].last_meal = 0;
 		philosoph[i].info = var;
 		if (i == 0)
 			philosoph[i].neighbor = &philosoph[var->nbr_of_philo - 1].self;
@@ -72,13 +74,13 @@ int	finish(t_glob *var)
 		{
 			pthread_mutex_destroy(&var->philosoph[i].self);
 			pthread_mutex_destroy(&var->philosoph[i].eat);
+			pthread_mutex_destroy(&var->philosoph[i].meal);
 			i++;
 		}
 		pthread_mutex_destroy(&var->info.write);
 		pthread_mutex_destroy(&var->info.died);
 	}
-	free(var->philosoph);
-	return (0);
+	return (free(var->philosoph), 0);
 }
 
 int	main(int ac, char **av)

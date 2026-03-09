@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 10:43:53 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 18:07:36 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:46:52 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct philo
 	pthread_mutex_t		self;
 	pthread_mutex_t		*neighbor;
 	pthread_mutex_t		eat;
+	pthread_mutex_t		meal;
 	int					id;
 	int					fork;
 	int					nb_eat;
@@ -74,5 +75,6 @@ long					ft_atoi(char *str);
 void					philo_print(t_philo *philo, char *print);
 long					get_time_ms(void);
 int						flag_died(t_philo *philo);
+int						monitorv2(t_glob *global, int i, int nb_philo_must_eat);
 
 #endif

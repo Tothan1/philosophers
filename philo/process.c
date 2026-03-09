@@ -6,7 +6,7 @@
 /*   By: tle-rhun <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 19:03:54 by tle-rhun          #+#    #+#             */
-/*   Updated: 2026/03/07 18:42:37 by tle-rhun         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:46:18 by tle-rhun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,52 +25,47 @@ void	action(t_philo *philo, int time, char *print)
 void	*routine(void *var)
 {
 	t_philo	*philo;
-	int		time_think;
 
-	time_think = 0;
 	philo = (t_philo *)var;
-	philo->last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	pthread_mutex_lock(&philo->info->died);
+	pthread_mutex_lock(&philo->meal);
+	philo->last_meal = get_time_ms();
+	pthread_mutex_unlock(&philo->meal);
 	pthread_mutex_lock(&philo->eat);
-	while (!philo->info->finished && (philo->info->nbr_must_eat == -1
+	while (flag_died(philo) && (philo->info->nbr_must_eat == -1
 			|| philo->nb_eat < philo->info->nbr_must_eat))
 	{
-		pthread_mutex_unlock(&philo->info->died);
 		pthread_mutex_unlock(&philo->eat);
 		take_a_fork(philo);
 		action(philo, philo->info->time_to_sleep, "is sleeping");
 		action(philo, 1, "is thinking");
-		pthread_mutex_lock(&philo->info->died);
 		pthread_mutex_lock(&philo->eat);
 	}
 	pthread_mutex_unlock(&philo->eat);
-	pthread_mutex_unlock(&philo->info->died);
 	return (NULL);
 }
 
 int	take_a_fork(t_philo *philo)
 {
-	if (!philo->info->finished)
+	if (philo->id % 2 == 0)
 	{
-		if (philo->id % 2 == 0)
-		{
-			pthread_mutex_lock(&philo->self);
-			philo_print(philo, "has taken a fork");
-			pthread_mutex_lock(philo->neighbor);
-			philo_print(philo, "has taken a fork");
-		}
-		else
-		{
-			pthread_mutex_lock(philo->neighbor);
-			philo_print(philo, "has taken a fork");
-			pthread_mutex_lock(&philo->self);
-			philo_print(philo, "has taken a fork");
-		}
+		pthread_mutex_lock(philo->neighbor);
+		philo_print(philo, "has taken a fork");
+		pthread_mutex_lock(&philo->self);
+		philo_print(philo, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->self);
+		philo_print(philo, "has taken a fork");
+		pthread_mutex_lock(philo->neighbor);
+		philo_print(philo, "has taken a fork");
 	}
 	action(philo, philo->info->time_to_eat, "is eating");
+	pthread_mutex_lock(&philo->meal);
 	philo->last_meal = get_time_ms();
+	pthread_mutex_unlock(&philo->meal);
 	pthread_mutex_lock(&philo->eat);
 	philo->nb_eat++;
 	pthread_mutex_unlock(&philo->eat);
@@ -83,33 +78,17 @@ void	*monitor(void *var)
 {
 	t_glob	*global;
 	int		nb_philo_must_eat;
-	int		i;
 
 	global = (t_glob *)var;
-	pthread_mutex_lock(&global->info.died);
-	while (!global->info.finished)
+	while (flag_died(global->philosoph))
 	{
-		pthread_mutex_unlock(&global->info.died);
-		i = 0;
-		nb_philo_must_eat = 0;
-		while (i < global->info.nbr_of_philo)
-		{
-			pthread_mutex_lock(&global->philosoph[i].eat);
-			if (global->philosoph[i].nb_eat == global->info.nbr_must_eat
-				&& global->info.nbr_must_eat != -1)
-				nb_philo_must_eat++;
-			pthread_mutex_unlock(&global->philosoph[i].eat);
-			i++;
-		}
-		pthread_mutex_lock(&global->info.died);
+		nb_philo_must_eat = monitorv2(global, 0, 0);
+		if (nb_philo_must_eat == -1)
+			return (0);
 		if (nb_philo_must_eat == global->info.nbr_of_philo
 			&& global->info.nbr_must_eat != -1)
 			global->info.finished = 1;
-		pthread_mutex_unlock(&global->info.died);
-		usleep(1000);
-		pthread_mutex_lock(&global->info.died);
 	}
-	pthread_mutex_unlock(&global->info.died);
 	return (NULL);
 }
 
