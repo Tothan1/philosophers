@@ -3,7 +3,7 @@ NAME = philo
 # HEADER_PATH = include
 CC= cc
 # CFLAGS=-Wall -Wextra -Werror -I $(HEADER0_PATH)
-CFLAGS=-Wall -Wextra -Werror -pthread
+CFLAGS=-Wall -Wextra -Werror
 # OBJ=ft_*.c =.o
 # SRCS = $(HEADER_PATH)ft_atoi
 #### SOURCE ####
